@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
@@ -26,12 +27,11 @@ public class Controller implements Initializable {
 
     public void changeSignButton_pressed(ActionEvent actionEvent) {
         Calculator.changeSign();
-        result_label.setText(Calculator.getCurrentNumber());
+        update_result(Double.parseDouble(Calculator.getCurrentNumber()));
     }
 
     public void operatorButton_pressed(ActionEvent actionEvent) {
         Button button = (Button)actionEvent.getSource();
-        Calculator.saveNumber();
         Calculator.addOperator(button.getText());
         result_label.setText("");
     }
@@ -50,11 +50,17 @@ public class Controller implements Initializable {
     public void equalButton_pressed(ActionEvent actionEvent) {
         Calculator.saveNumber();
         double result = Calculator.calculate();
-        if(result == (long) result)
-            // TODO:: Round to 5th decimal place
-            result_label.setText(String.format("%d",(long)result));
-        else
-            result_label.setText(String.format("%s",result));
+        update_result(result);
         Calculator.clear();
+    }
+
+    private void update_result(double result) {
+        if(result == (long) result) {
+            // If whole number
+            result_label.setText(String.format("%d", (long) result));
+        } else {
+            // If have digits after decimals
+            result_label.setText(String.format("%.6f",result));
+        }
     }
 }
